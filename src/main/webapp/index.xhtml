@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Prueba Técnica</title>
+</h:head>
+
+<h:body>
+    <p:growl id="messages" showDetail="true" />
+
+    <h:form id="taskForm">
+        <p:panel header="Gestión de Tareas" style="margin-bottom:20px">
+            <h:panelGrid columns="4" cellpadding="5">
+                <p:outputLabel for="title" value="Título:" />
+                <p:inputText id="title" value="#{taskController.newTask.title}" required="true" />
+
+                <p:outputLabel for="dueDate" value="Fecha Límite:" />
+                <p:calendar id="dueDate" value="#{taskController.newTask.dueDate}" showOn="button" pattern="dd/MM/yyyy" required="true" />
+
+                <p:outputLabel for="description" value="Descripción:" />
+                <p:inputTextarea id="description" value="#{taskController.newTask.description}" rows="2" cols="30" />
+
+                <p:commandButton value="Guardar Tarea" action="#{taskController.createTask}" 
+                                 update=":taskForm:taskTable messages @form" icon="ui-icon-disk" />
+            </h:panelGrid>
+        </p:panel>
+
+        <p:dataTable id="taskTable" var="task" value="#{taskController.tasks}" 
+                     selectionMode="single" selection="#{taskController.selectedTask}" rowKey="#{task.id}"
+                     emptyMessage="No hay tareas registradas" style="margin-top:20px">
+            
+            <p:column headerText="ID" width="50">
+                <h:outputText value="#{task.id}" />
+            </p:column>
+
+            <p:column headerText="Título">
+                <h:outputText value="#{task.title}" style="#{task.completed ? 'text-decoration: line-through;' : ''}" />
+            </p:column>
+
+            <p:column headerText="Descripción">
+                <h:outputText value="#{task.description}" />
+            </p:column>
+
+            <p:column headerText="Fecha Límite" width="120">
+                <h:outputText value="#{task.dueDate}">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Estado" width="100">
+                <h:outputText value="#{task.completed ? 'Completada' : 'Pendiente'}" 
+                              style="font-weight:bold; color: #{task.completed ? 'green' : 'orange'};" />
+            </p:column>
+
+            <p:column headerText="Acciones" width="150">
+                <p:commandButton icon="ui-icon-check" title="Completar" 
+                                 action="#{taskController.completeTask(task.id)}"
+                                 process="@this"
+                                 update=":taskForm:taskTable messages" 
+                                 rendered="#{!task.completed}" />
+                
+                <p:commandButton icon="ui-icon-trash" title="Eliminar" 
+                                 action="#{taskController.deleteTask(task.id)}"
+                                 process="@this"
+                                 update=":taskForm:taskTable messages" 
+                                 styleClass="ui-priority-danger">
+                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar esta tarea?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+    </h:form>
+
+    <h:form id="dbStatusForm" style="margin-top: 20px;">
+        <p:panel header="Estado del Sistema" toggleable="true" collapsed="true">
+            <h:outputText value="#{databaseStatusBean.statusMessage}" style="font-weight:bold; color: #00796B;"/>
+        </p:panel>
+    </h:form>
+</h:body>
+
+</html>

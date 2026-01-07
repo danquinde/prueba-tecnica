@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    
+    <persistence-unit name="prueba-tecnica" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!-- <jta-data-source>java:jboss/datasources/OracleDS</jta-data-source> -->
+        
+        <class>net.xiliosoft.prueba_tecnica.model.Task</class>
+        
+        <properties>
+            <!-- Configuración de Hibernate -->
+            <!-- <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/> -->
+            
+            <!-- Configuración de la conexión -->
+            <!-- Para Oracle -->
+            <!--
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+            <property name="javax.persistence.jdbc.user" value="system"/>
+            <property name="javax.persistence.jdbc.password" value="oracle"/>
+            <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+            -->
+
+            <!-- Para H2 -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:testdb;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            
+            <!-- Configuración de JPA -->
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+            <property name="javax.persistence.schema-generation.scripts.action" value="none"/>
+        </properties>
+    </persistence-unit>
+</persistence> 
